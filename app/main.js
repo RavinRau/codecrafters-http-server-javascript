@@ -7,8 +7,12 @@ function responseHTTP(msg, request, url, directory) {
         // nothing after / means it's ok but nothing to be done
         if (request[1] === "/") return "HTTP/1.1 200 OK\r\n\r\n";
         // echo instruction returns whatever string is given after it
-        if (url[1] === "echo")
-            return `HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: ${url[2].length}\r\n\r\n${url[2]}`;
+        if (url[1] === "echo") {
+            const encodingInfo = msg[2].split(" ");
+            const encodingMsg =
+                encodingInfo[1] === "gzip" ? "Content-Encoding: gzip\r\n" : "";
+            return `HTTP/1.1 200 OK\r\n${encodingMsg}Content-Type: text/plain\r\nContent-Length: ${url[2].length}\r\n\r\n${url[2]}`;
+        }
         // user agent header indicates info about the client
         if (url[1] === "user-agent") {
             const user = msg[2].split(" ")[1];
