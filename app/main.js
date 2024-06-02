@@ -8,9 +8,10 @@ function responseHTTP(msg, request, url, directory) {
         if (request[1] === "/") return "HTTP/1.1 200 OK\r\n\r\n";
         // echo instruction returns whatever string is given after it
         if (url[1] === "echo") {
-            const encodingInfo = msg[2].split(" ");
-            const encodingMsg =
-                encodingInfo[1] === "gzip" ? "Content-Encoding: gzip\r\n" : "";
+            const encodingInfo = msg[2];
+            const encodingMsg = encodingInfo.includes("gzip")
+                ? "Content-Encoding: gzip\r\n"
+                : "";
             return `HTTP/1.1 200 OK\r\n${encodingMsg}Content-Type: text/plain\r\nContent-Length: ${url[2].length}\r\n\r\n${url[2]}`;
         }
         // user agent header indicates info about the client
